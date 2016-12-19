@@ -56,4 +56,13 @@
                 : [rs1] "i" (rs1_), [rs2] "i" (rs2_), [funct] "i" (funct_))
 */
 
+#define RVTEST_XS_ENABLE \
+  li a0, MSTATUS_XS & (MSTATUS_XS >> 1); \
+  csrs mstatus, a0;
+
+#define RVTEST_WITH_ROCC \
+  .macro init; \
+  RVTEST_XS_ENABLE \
+  .endm
+
 #endif  // SRC_XCUSTOM_H_
