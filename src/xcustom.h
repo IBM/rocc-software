@@ -1,7 +1,7 @@
 // See LICENSE for license details.
 
-#ifndef SRC_ROCC_H_
-#define SRC_ROCC_H_
+#ifndef ROCC_SOFTWARE_SRC_XCUSTOM_H_
+#define ROCC_SOFTWARE_SRC_XCUSTOM_H_
 
 #define STR1(x) #x
 #define STR(x) STR1(x)
@@ -56,13 +56,4 @@
                 : [rs1] "i" (rs1_), [rs2] "i" (rs2_), [funct] "i" (funct_))
 */
 
-#define RVTEST_XS_ENABLE \
-  li a0, MSTATUS_XS & (MSTATUS_XS >> 1); \
-  csrs mstatus, a0;
-
-#define RVTEST_WITH_ROCC \
-  .macro init; \
-  RVTEST_XS_ENABLE \
-  .endm
-
-#endif  // SRC_XCUSTOM_H_
+#endif  // ROCC_SOFTWARE_SRC_XCUSTOM_H_
