@@ -7,6 +7,17 @@
 #define STR(x) STR1(x)
 #define EXTRACT(a, size, offset) (((~(~0 << size) << offset) & a) >> offset)
 
+// rd = rs2[offset + size - 1 : offset]
+// rs1 is clobbered
+// rs2 is left intact
+#define EXTRACT_RAW(rd, rs1, rs2, size, offset) \
+  not x ## rs1, x0;                             \
+  slli x ## rs1, x ## rs1, size;                \
+  not x ## rs1, x ## rs1;                       \
+  slli x ## rs1, x ## rs1, offset;              \
+  and x ## rd, x ## rs1, x ## rs2;              \
+  srai x ## rd, x ## rd, offset;
+
 #define XCUSTOM_OPCODE(x) XCUSTOM_OPCODE_ ## x
 #define XCUSTOM_OPCODE_0 0b0001011
 #define XCUSTOM_OPCODE_1 0b0101011
