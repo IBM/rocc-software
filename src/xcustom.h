@@ -41,12 +41,13 @@
 
 // rd, rs1, and rs2 are data
 // rd_n, rs_1, and rs2_n are the register numbers to use
-#define ROCC_INSTRUCTION_R_R_R(x, rd, rs1, rs2, funct, rd_n, rs1_n, rs2_n) { \
+#define ROCC_INSTRUCTION_R_R_R(x, rd, rs1, rs2, funct, rd_n, rs1_n, rs2_n) \
+  {                                                                     \
     register uint64_t rd_  asm ("x" # rd_n);                            \
     register uint64_t rs1_ asm ("x" # rs1_n) = (uint64_t) rs1;          \
     register uint64_t rs2_ asm ("x" # rs2_n) = (uint64_t) rs2;          \
     asm volatile (                                                      \
-        ".word " STR(CUSTOMX(x, rd_n, rs1_n, rs2_n, funct)) "\n\t"      \
+        ".word " STR(XCUSTOM(x, rd_n, rs1_n, rs2_n, funct)) "\n\t"      \
         : "=r" (rd_)                                                    \
         : [_rs1] "r" (rs1_), [_rs2] "r" (rs2_));                        \
     rd = rd_;                                                           \
