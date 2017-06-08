@@ -27,7 +27,8 @@
 #define XCUSTOM(x, rd, rs1, rs2, funct)         \
   XCUSTOM_OPCODE(x)                   |         \
   (rd                   << (7))       |         \
-  (0x7                  << (7+5))     |         \
+  (0x3                  << (7+5))     |         \
+  ((rd != 0) & 1        << (7+5+2))   |         \
   (rs1                  << (7+5+3))   |         \
   (rs2                  << (7+5+3+5)) |         \
   (EXTRACT(funct, 7, 0) << (7+5+3+5+5))
