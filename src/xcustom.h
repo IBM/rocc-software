@@ -1,4 +1,4 @@
-// See LICENSE.IBM for license details.
+// See LICENSE for license details.
 
 #ifndef ROCC_SOFTWARE_SRC_XCUSTOM_H_
 #define ROCC_SOFTWARE_SRC_XCUSTOM_H_
