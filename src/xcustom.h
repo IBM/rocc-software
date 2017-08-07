@@ -4,7 +4,9 @@
 #define ROCC_SOFTWARE_SRC_XCUSTOM_H_
 
 #define STR1(x) #x
+#ifndef STR
 #define STR(x) STR1(x)
+#endif
 #define EXTRACT(a, size, offset) (((~(~0 << size) << offset) & a) >> offset)
 
 // rd = rs2[offset + size - 1 : offset]
