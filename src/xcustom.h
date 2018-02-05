@@ -56,6 +56,15 @@
     rd = rd_;                                                           \
   }
 
+#define ROCC_INSTRUCTION_X_R_R(x, rs1, rs2, funct, rs1_n, rs2_n)  \
+  {                                                               \
+    register uint64_t rs1_ asm ("x" # rs1_n) = (uint64_t) rs1;    \
+    register uint64_t rs2_ asm ("x" # rs2_n) = (uint64_t) rs2;    \
+    asm volatile (                                                \
+        ".word " STR(XCUSTOM(x, 0, rs1_n, rs2_n, funct)) "\n\t"   \
+        :: [_rs1] "r" (rs1_), [_rs2] "r" (rs2_));                 \
+  }
+
 // [TODO] fix these to align with the above approach
 // Macro to pass rs2_ as an immediate
 /*
