@@ -56,7 +56,7 @@
     rd = rd_;                                                           \
   }
 
-#define ROCC_INSTRUCTION_X_R_R(x, rs1, rs2, funct, rs1_n, rs2_n)  \
+#define ROCC_INSTRUCTION_0_R_R(x, rs1, rs2, funct, rs1_n, rs2_n)  \
   {                                                               \
     register uint64_t rs1_ asm ("x" # rs1_n) = (uint64_t) rs1;    \
     register uint64_t rs2_ asm ("x" # rs2_n) = (uint64_t) rs2;    \
