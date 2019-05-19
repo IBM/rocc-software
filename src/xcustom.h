@@ -55,7 +55,7 @@
   ROCC_INSTRUCTION_R_R_R(x, rd, rs1, rs2, funct, 10, 11, 12)
 
 // rd, rs1, and rs2 are data
-// rd_n, rs_1, and rs2_n are the register numbers to use
+// rd_n, rs1_n, and rs2_n are the register numbers to use
 #define ROCC_INSTRUCTION_R_R_R(x, rd, rs1, rs2, funct, rd_n, rs1_n, rs2_n) \
   {                                                                     \
     register uint64_t rd_  asm ("x" # rd_n);                            \
