@@ -23,16 +23,95 @@
 #define CAT_(A, B) A ## B
 #define CAT(A, B) CAT_(A, B)
 
+/** Assembly macro for creating "raw" Rocket Custom Coproessor (RoCC)
+  * assembly language instructions that will return data in rd. These
+  * are to be used only in assembly language programs (not C/C++).
+  *
+  * Example:
+  *
+  * Consider the following macro consisting of a CUSTOM_0 instruction
+  * with func7 "42" that is doing some operation of "a0 = op(a1, a2):
+  *
+  *     ROCC_INSTRUCTION_RAW_R_R_R(0, a0, a1, a2, 42)
+  *
+  * This will produce the following pseudo assembly language
+  * instruction:
+  *
+  *     .insn r CUSTOM_0, 7, 42, a0, a1, a2
+  *
+  * @param x the custom instruction number: 0, 1, 2, or 3
+  * @param rd the destination register, e.g., a0 or x10
+  * @param rs1 the first source register, e.g., a0 or x10
+  * @param rs2 the second source register, e.g., a0 or x10
+  * @param func7 the value of the func7 field
+  * @return a raw .insn RoCC instruction
+  */
 #define ROCC_INSTRUCTION_RAW_R_R_R(x, rd, rs1, rs2, func7) \
   .insn r CAT(CUSTOM_, x), 7, func7, rd, rs1, rs2
 
+/** Assembly macro for creating "raw" Rocket Custom Coproessor (RoCC)
+  * assembly language instructions that will *NOT* return data in rd.
+  * These are to be used only in assembly language programs (not
+  * C/C++).
+  *
+  * Example:
+  *
+  * Consider the following macro consisting of a CUSTOM_1 instruction
+  * with func7 "42" that is doing some operation of "op(a1, a2). *NO*
+  * data is returned:
+  *
+  *     ROCC_INSTRUCTION_RAW_R_R_R(1, a1, a2, 42)
+  *
+  * This will produce the following pseudo assembly language
+  * instruction:
+  *
+  *     .insn r CUSTOM_1, 3, 42, x0, a1, a2
+  *
+  * @param x the custom instruction number: 0, 1, 2, or 3
+  * @param rs1 the first source register, e.g., a0 or x10
+  * @param rs2 the second source register, e.g., a0 or x10
+  * @param func7 the value of the func7 field
+  * @return a raw .insn RoCC instruction
+  */
 #define ROCC_INSTRUCTION_RAW_0_R_R(x, rs1, rs2, func7) \
   .insn r CAT(CUSTOM_, x), 3, func7, x0, rs1, rs2
 
 
+/** C/C++ inline assembly macro for creating Rocket Custom Coprocessor
+  * (RoCC) instructions that return data in rd. These are to be used
+  * only in C/C++ programs (not bare assembly).
+  *
+  * This is equivalent to ROCC_INSTRUCTION_R_R_R. See it's
+  * documentation.
+  */
 #define ROCC_INSTRUCTION(x, rd, rs1, rs2, func7) \
   ROCC_INSTRUCTION_R_R_R(x, rd, rs1, rs2, func7)
 
+/** C/C++ inline assembly macro for creating Rocket Custom Coprocessor
+  * (RoCC) instructions that return data in rd. These are to be used
+  * only in C/C++ programs (not bare assembly).
+  *
+  * Example:
+  *
+  * Consider the following macro consisting of a CUSTOM_2 instruction
+  * with func7 "42" that is doing some operation of "a0 = op(a1, a2):
+  *
+  *     ROCC_INSTRUCTION(2, a0, a1, a2, 42)
+  *
+  * This will produce the following inline assembly:
+  *
+  *     asm volatile(
+  *         ".insn r CUSTOM_2, 0x7, 42, %0, %1, %2"
+  *         : "=r"(rd)
+  *         : "r"(rs1), "r"(rs2));
+  *
+  * @param x the custom instruction number: 0, 1, 2, or 3
+  * @param rd the destination register, e.g., a0 or x10
+  * @param rs1 the first source register, e.g., a0 or x10
+  * @param rs2 the second source register, e.g., a0 or x10
+  * @param func7 the value of the func7 field
+  * @return an inline assembly RoCC instruction
+  */
 #define ROCC_INSTRUCTION_R_R_R(x, rd, rs1, rs2, func7)                 \
   {                                                                     \
     asm volatile(                                                       \
@@ -41,6 +120,29 @@
         : "r"(rs1), "r"(rs2));                                          \
   }
 
+/** C/C++ inline assembly macro for creating Rocket Custom Coprocessor
+  * (RoCC) instructions that return data in rd. These are to be used
+  * only in C/C++ programs (not bare assembly).
+  *
+  * Example:
+  *
+  * Consider the following macro consisting of a CUSTOM_3 instruction
+  * with func7 "42" that is doing some operation of "a0 = op(a1, a2):
+  *
+  *     ROCC_INSTRUCTION(3, a0, a1, a2, 42)
+  *
+  * This will produce the following inline assembly:
+  *
+  *     asm volatile(
+  *         ".insn r CUSTOM_3, 0x7, 42, %0, %1, %2"
+  *         :: "r"(rs1), "r"(rs2));
+  *
+  * @param x the custom instruction number: 0, 1, 2, or 3
+  * @param rs1 the first source register, e.g., a0 or x10
+  * @param rs2 the second source register, e.g., a0 or x10
+  * @param funct7 the value of the funct7 f
+  * @return an inline assembly RoCC instruction
+  */
 #define ROCC_INSTRUCTION_0_R_R(x, rs1, rs2, func7)                     \
   {                                                                     \
     asm volatile(                                                       \
