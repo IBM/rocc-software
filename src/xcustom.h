@@ -20,31 +20,32 @@
 #define STR(x) STR1(x)
 #endif
 
-#define XCUSTOM_OPCODE(x) XCUSTOM_OPCODE_##x
-#define XCUSTOM_OPCODE_0 0b0001011
-#define XCUSTOM_OPCODE_1 0b0101011
-#define XCUSTOM_OPCODE_2 0b1011011
-#define XCUSTOM_OPCODE_3 0b1111011
+#define CAT_(A, B) A ## B
+#define CAT(A, B) CAT_(A, B)
 
-// Standard macro that passes rd, rs1, and rs2 via registers
-#define ROCC_INSTRUCTION(x, rd, rs1, rs2, funct7) \
-  ROCC_INSTRUCTION_R_R_R(x, rd, rs1, rs2, funct7)
+#define ROCC_INSTRUCTION_RAW_R_R_R(x, rd, rs1, rs2, func7) \
+  .insn r CAT(CUSTOM_, x), 7, func7, rd, rs1, rs2
 
-// rd, rs1, and rs2 are data
-#define ROCC_INSTRUCTION_R_R_R(x, rd, rs1, rs2, funct7)                                 \
-  {                                                                                     \
-    asm volatile(                                                                       \
-        ".insn r " STR(XCUSTOM_OPCODE(x)) ", " STR(0x3) ", " STR(funct7) ", %0, %1, %2" \
-        : "=r"(rd)                                                                      \
-        : "r"(rs1), "r"(rs2));                                                          \
+#define ROCC_INSTRUCTION_RAW_0_R_R(x, rs1, rs2, func7) \
+  .insn r CAT(CUSTOM_, x), 3, func7, x0, rs1, rs2
+
+
+#define ROCC_INSTRUCTION(x, rd, rs1, rs2, func7) \
+  ROCC_INSTRUCTION_R_R_R(x, rd, rs1, rs2, func7)
+
+#define ROCC_INSTRUCTION_R_R_R(x, rd, rs1, rs2, func7)                 \
+  {                                                                     \
+    asm volatile(                                                       \
+        ".insn r " STR(CAT(CUSTOM_, x)) ", " STR(0x7) ", " STR(func7) ", %0, %1, %2" \
+        : "=r"(rd)                                                      \
+        : "r"(rs1), "r"(rs2));                                          \
   }
 
-#define ROCC_INSTRUCTION_0_R_R(x, rs1, rs2, funct7)                                     \
-  {                                                                                     \
-    asm volatile(                                                                       \
-        ".insn r " STR(XCUSTOM_OPCODE(x)) ", " STR(0x3) ", " STR(funct7) ", x0, %0, %1" \
-        :                                                                               \
-        : "r"(rs1), "r"(rs2));                                                          \
+#define ROCC_INSTRUCTION_0_R_R(x, rs1, rs2, func7)                     \
+  {                                                                     \
+    asm volatile(                                                       \
+        ".insn r " STR(CAT(CUSTOM_, x)) ", " STR(0x3) ", " STR(func7) ", x0, %0, %1" \
+        :: "r"(rs1), "r"(rs2));                                         \
   }
 
 // [TODO] fix these to align with the above approach
