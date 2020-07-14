@@ -60,7 +60,7 @@
   * with func7 "42" that is doing some operation of "op(a1, a2)". *NO*
   * data is returned:
   *
-  *     ROCC_INSTRUCTION_RAW_R_R_R(1, a1, a2, 42)
+  *     ROCC_INSTRUCTION_RAW_0_R_R(1, a1, a2, 42)
   *
   * This will produce the following pseudo assembly language
   * instruction:
